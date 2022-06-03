@@ -1,6 +1,6 @@
 from feat import Detector
 import os
-import re
+from pprint import pprint
 
 class FACS:
     def __init__(self, root, au_model="rf", emotion_model = "resmasknet") -> None:
@@ -11,7 +11,7 @@ class FACS:
         # call all functions
         self.get_all_videos(self.root)
         self.generate_features()
-        # print(self.videos)
+        pprint(self.videos)
 
 
     def get_all_videos(self, dir):
@@ -19,7 +19,7 @@ class FACS:
             subdir = os.path.join(dir, file)
             if os.path.isdir(subdir):
                 self.get_all_videos(subdir)
-            elif subdir.endswith('all_video_Z_S_L.mov'):   
+            elif subdir.endswith('.mov'):   
                 self.videos[subdir] = subdir.replace('.mov','.csv')
         
 
@@ -28,8 +28,10 @@ class FACS:
             if os.path.exists(output):
                 print("Already processed ", video)
             else:
-                print("Processing ", video)
-                self.detector.detect_video(video, output, skip_frames=30)
+                # assert os.path.isfile(output)
+                with open(output, "w") as f:
+                    print("Processing ", video)
+                    self.detector.detect_video(video, output, skip_frames=30)
 
 root = "VIDEO_LOW_QUALITY"
 facs = FACS(root)
