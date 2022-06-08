@@ -23,7 +23,7 @@ generate_features()   : this function is used to call the detector function of t
                         to detect all the FEX from the video
 """
 class FACS:
-    def __init__(self, root, dest, frames = 30, au_model="rf", emotion_model = "resmasknet") -> None:
+    def __init__(self, root, dest, frames = 1, au_model="rf", emotion_model = "resmasknet") -> None:
         self.detector = Detector(au_model = au_model, emotion_model = emotion_model)
         self.videos = {}
         self.root = root
@@ -41,11 +41,11 @@ class FACS:
         # creates a dictionary with key as all the videos that need to be processed
         # value is the destination location of the .csv file
         for file in os.listdir(loc):
-            subdir = os.path.join(dir, file)
+            subdir = os.path.join(loc, file)
             if os.path.isdir(subdir):
                 self.get_all_videos(subdir)
             elif os.path.isfile(subdir) and subdir.endswith('.mov'):
-                self.videos[subdir] = os.path.join(self.dest,   subdir.replace('.mov', '.csv'))
+                self.videos[subdir] = file.replace('.mov', '.csv')
 
 
     def create_directory(self, loc):
@@ -60,19 +60,23 @@ class FACS:
         # call the detector function of the py-feat library to detect all the FEX from the video
 
         for video, output in self.videos.items():
+            # add desired destination to output file name
+            dir = os.path.join(self.dest, (os.path.dirname(video) + "_"+str(self.frames)+ "_frames"))
+            output = os.path.join(dir, output) 
+
             # check if the output file already exists
             if os.path.exists(output):
                 print("Already processed ", video)
             else:
                 # if the output file doesn't exist, first check for the current directory
-                self.create_directory(os.path.dirname(output))
+                self.create_directory(dir)
                 # assert os.path.isfile(output)
 
-                #with open(output, "w") as file:
-                print("Processing ", video)
-                self.detector.detect_video(video, output, skip_frames=self.frames)
+                with open(output, "w") as file:
+                    print("Processing ", video)
+                    self.detector.detect_video(video, output, skip_frames=self.frames)
 
-if __name__ == "main":
-    ROOT = "VIDEO_HIGH_QUALITY"
-    DEST = "Processed"
-    facs = FACS(ROOT, DEST)
+
+ROOT = "VIDEO_LOW_QUALITY"
+DEST = "Processed"
+facs = FACS(ROOT, DEST)
