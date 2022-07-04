@@ -1,3 +1,5 @@
 venv/
 /VIDEO_LOW_QUALITY/
 /VIDEO_HIGH_QUALITY/
+.Rproj.user
+Processed_RF
