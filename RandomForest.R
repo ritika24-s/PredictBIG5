@@ -96,12 +96,12 @@ confusionMatrix(test$o_rf_default, test$openness_score)
 # error rate of defualt model
 plot(rf_openness1, main = "Random Forest Openness Default model")
 
-# trees = 300
+# trees = 500
 # using tuneRf function find best mtry
 t <- tuneRF(train[,c(4:23, 32)], train[,33],
-            stepFactor = 0.8,
+            stepFactor = 0.2,
             plot=TRUE,
-            ntreeTry = 300,
+            ntreeTry = 500,
             trace = TRUE,
             improve = 0.05)
 
@@ -127,24 +127,25 @@ hist(treesize(rf_openness1),
      col = "blue")
 
 # to check importance of the variable
-varImpPlot(rf_openness1,
+varImpPlot(rf_openness,
            sort = T,
            main = "Variable improtance for Openness - RF")
-varImpPlot(rf_openness1,
-           n.var = 4,
+varImpPlot(rf_openness,
+           n.var = 5,
            sort = T,
-           main = "Top 4 variable improtance for Openness - RF")
+           main = "Top 5 variable improtance for Openness - RF")
 
-importance(rf_openness1)
+importance(rf_openness)
+
 varUsed(rf_openness)
 
 # partial dependence plot
-partialPlot(rf_openness1, train, AU02,  "High",
-            main = "AU02 dependency on Openness - RF" )
-partialPlot(rf_openness1, train, AU01,  "High",
+partialPlot(rf_openness, train, AU01,  "High",
             main = "AU01 dependency on Openness - RF" )
-partialPlot(rf_openness1, train, AU17,  "High",
-            main = "AU17 dependency on Openness - RF" )
+partialPlot(rf_openness, train, AU28,  "High",
+            main = "AU28 dependency on Openness - RF" )
+partialPlot(rf_openness, train, gender,  "High",
+            main = "Gender dependency on Openness - RF" )
 
 #---------------------------------------------------------
 #------------------------- conscientious --------------------
@@ -168,21 +169,21 @@ plot(rf_conscientiousness1, main = "Random Forest Conscientiousness Default mode
 
 
 # using tuneRf function find best mtry
-t <- tuneRF(train[,4:23], train[,33],
+t <- tuneRF(train[,c(4:23,32)], train[,33],
             plot=TRUE,
             ntreeTry = 500,
             trace = TRUE,
-            stepFactor=0.2,
+            stepFactor=0.8,
             improve=0.05)
 
-# got mtry = 5 as most optimal and ntress = 400
+# got mtry = 5 as most optimal and ntress = 500
 # train model with these parameters
 rf_conscientiousness <- randomForest(conscientious_score~AU01+AU02+AU05+	
                               AU06+AU07+AU09+AU10+AU11+AU12+AU14+AU15+AU17+
                               AU20+AU23+AU24+AU25+AU26+AU28+AU43+gender,
                             data = train,
                             ntree = 500,
-                            mtry = 6,
+                            mtry = 5,
                             proximity = TRUE,
                             importance =TRUE)
 print(rf_conscientiousness)
@@ -191,7 +192,7 @@ print(rf_conscientiousness)
 test$c_rf <- predict(rf_conscientiousness, test)
 confusionMatrix(test$c_rf, test$conscientious_score)
 
-# mty = 4 and trees = 500 gives the best results
+# defualt model mty = 4 and trees = 500 gives the best results
 # Number of nodes for the trees
 hist(treesize(rf_conscientiousness1),
      main = "Number of nodes for trees - conscientiousness RF",
@@ -212,8 +213,8 @@ varUsed(rf_conscientiousness1)
 # partial dependence plot
 partialPlot(rf_conscientiousness, train, AU02,  "High",
             main = "AU02 dependency on conscientiousness - RF" )
-partialPlot(rf_conscientiousness, train, AU01,  "High",
-            main = "AU02 dependency on conscientiousness - RF" )
+partialPlot(rf_conscientiousness1, train, AU01,  "High",
+            main = "AU01 dependency on conscientiousness - RF" )
 partialPlot(rf_conscientiousness, train, AU28,  "High",
             main = "AU02 dependency on conscientiousness - RF" )
 #---------------------------------------------------------
@@ -238,20 +239,20 @@ plot(rf_agreeableness1, main = "Random Forest Agreeableness Default model")
 
 
 # using tuneRf function find best mtry
-t <- tuneRF(train[,4:23], train[,33],
-            stepFactor = 0.8,
+t <- tuneRF(train[,c(4:23, 32)], train[,33],
+            stepFactor = 0.4,
             plot=TRUE,
             ntreeTry = 500,
             trace = TRUE,
             improve = 0.05)
 
-# got mtry = 5 as most optimal and ntress = 400
+# got mtry = 5 as most optimal and ntress = 500
 # train model with these parameters
 rf_agreeableness <- randomForest(agreeableness_score~AU01+AU02+AU05+	
                                AU06+AU07+AU09+AU10+AU11+AU12+AU14+AU15+AU17+
                                AU20+AU23+AU24+AU25+AU26+AU28+AU43+gender,
                                data = train,
-                               ntree = 400,
+                               ntree = 500,
                                mtry = 5,
                                proximity = TRUE,
                                importance =TRUE)
@@ -271,26 +272,87 @@ varImpPlot(rf_agreeableness,
            sort = T,
            main = "Variable improtance for Agreeableness - RF")
 varImpPlot(rf_agreeableness,
-           n.var = 8,
+           n.var = 5,
            sort = T,
-           main = "Top 8 variable improtance for Agreeableness - RF")
+           main = "Top 5 variable improtance for Agreeableness - RF")
 
 importance(rf_agreeableness)
 varUsed(rf_agreeableness)
 
 # partial dependence plot
-partialPlot(rf_agreeableness, train, AU02,  "High",
-            main = "AU02 dependency on Agreeableness - RF" )
+partialPlot(rf_agreeableness, train, AU28,  "High",
+            main = "AU28 dependency on Agreeableness - RF" )
 partialPlot(rf_agreeableness, train, AU01,  "High",
-            main = "AU02 dependency on Agreeableness - RF" )
+            main = "AU01 dependency on Agreeableness - RF" )
 partialPlot(rf_agreeableness, train, AU28,  "High",
             main = "AU02 dependency on Agreeableness - RF" )
 #---------------------------------------------------------
-#------------------------- neuroticism --------------------
-rf_neuroticism <- randomForest(neurotcism_score~AU01+AU02+AU05+	
-                          AU06+AU07+AU09+AU10+AU11+AU12+AU14+AU15+AU17+
-                          AU20+AU23+AU24+AU25+AU26+AU28+AU43+gender,
-                        data = train,
-                        method = "rf",
-                        metric = "Accuracy",
-                        trControl = trControl)
+#------------------------- Neuroticism --------------------
+dqset.seed(101)
+rf_neuroticism_ <- randomForest(neurotcism_score~AU01+AU02+AU05+	
+                            AU06+AU07+AU09+AU10+AU11+AU12+AU14+AU15+AU17+
+                            AU20+AU23+AU24+AU25+AU26+AU28+AU43+gender,
+                            data = train,
+                            ntree = 800,
+                            proximity = TRUE,
+                            importance =TRUE)
+
+# print the result 
+print(rf_neuroticism_)
+
+# predict on default model
+test$n_rf_default <- predict(rf_neuroticism1, test)
+confusionMatrix(test$n_rf_default, test$neurotcism_score)
+
+# error rate of default model
+plot(rf_neuroticism1, main = "Random Forest Neuroticism Default model")
+
+
+# using tuneRf function find best mtry
+t <- tuneRF(train[,c(4:23, 32)], train[,33],
+            stepFactor = 0.8,
+            plot=TRUE,
+            ntreeTry = 800,
+            trace = TRUE,
+            improve = 0.05)
+
+# got mtry = 5 as most optimal and ntress = 500
+# train model with these parameters
+rf_neuroticism3 <- randomForest(neurotcism_score~AU01+AU02+AU05+	
+                                   AU06+AU07+AU09+AU10+AU11+AU12+AU14+AU15+AU17+
+                                   AU20+AU23+AU24+AU25+AU26+AU28+AU43+gender,
+                                 data = train,
+                                 ntree = 1000,
+                                 mtry = 5,
+                                 proximity = TRUE,
+                                 importance =TRUE)
+print(rf_neuroticism3)
+
+# predict on tuned model
+test$n_rf <- predict(rf_neuroticism_, test)
+confusionMatrix(test$n_rf, test$neurotcism_score)
+
+# Number of nodes for the trees
+hist(treesize(rf_neuroticism1),
+     main = "Number of nodes for trees - Neuroticism RF",
+     col = "blue")
+
+# to check importance of the variable
+varImpPlot(rf_neuroticism1,
+           sort = T,
+           main = "Variable improtance for Neuroticism - RF")
+varImpPlot(rf_neuroticism1,
+           n.var = 7,
+           sort = T,
+           main = "Top 7 variable improtance for Neuroticism - RF")
+
+importance(rf_neuroticism1)
+varUsed(rf_neuroticism)
+
+# partial dependence plot
+partialPlot(rf_neuroticism1, train, AU28,  "High",
+            main = "AU28 dependency on Neuroticism - RF" )
+partialPlot(rf_neuroticism1, train, AU14,  "High",
+            main = "AU14 dependency on Neuroticism - RF" )
+partialPlot(rf_neuroticism1, train, gender,  "High",
+            main = "Gender dependency on Neuroticism - RF" )

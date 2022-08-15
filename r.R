@@ -106,7 +106,7 @@ ggscatter(person6_au, x = "AU01", y = "surprise",
           xlab = "AU01", ylab = "surprise")
 
 # to test normality distribution of all the variables
-lshap6 <- lapply(person6_au, shapiro.test)
+lshap6 <- lapply(BFI_44_assessment[,c(5,7,9,11,13)], shapiro.test)
 lshap7 <- lapply(person7_au_30, shapiro.test)
 
 shapiro.test(person7_au$AU14)
@@ -166,7 +166,11 @@ person6_hog_table <- table(person6_hog$AU12, person6_hog$happiness)
 # convert personality scores into binary values based on percentile
 
 # exclude annotator data
-BFI_44_assessment <- BFI_44_assessment[-c(3,4,5),]
+BFI_44_assessment <- BFI_44_assessment[-c(1,2,3,4,5),]
+summary(BFI_44_assessment)
+BFI_44_assessment <- na.omit(BFI_44_assessment)
+BFI_44_assessment [ , c(3:13)] <- apply(BFI_44_assessment[ , c(3:13),drop=F], 2,           
+                            function(x) as.numeric(as.character(x)))
 
 BFI_44_assessment$extraversion_score <- ifelse(
                             strtoi(BFI_44_assessment$...5)>=50, 1, 0)
