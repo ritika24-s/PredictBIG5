@@ -1,30 +1,19 @@
-# Modeling packages
-library(caret)     # for logistic regression modeling
+# Logistic Regression
 
-# Model interpretability packages
-install.packages('vip')
-library(vip)       # variable importance
+# import the dataset
+library(dplyr)
 
-# set seed
-dqset.seed(101)
-# train the model 
-e_glm <- glm(extraversion_score~AU01+AU02+AU05+	
-             AU06+AU07+AU09+AU10+AU11+AU12+AU14+AU15+AU17+
-             AU20+AU23+AU24+AU25+AU26+AU28+AU43+gender,
-             data = train,
-             family = "binomial")
-summary(e_glm)
+# Step 1: Check continuous variables
+# Step 2: Check factor variables
+# Step 3: Feature engineering
+# Step 4: Summary statistic
+# Step 5: Train/test set
+# Step 6: Build the model
+# Step 7: Assess the performance of the model
+# step 8: Improve the model
 
-# take only significant features
-e_glm1 <- glm(extraversion_score~AU02+	
-              AU10+AU11+AU12+AU14+
-               AU26+AU28+gender,
-             data = train,
-             family = "binomial")
-summary(e_glm1)
 
-# further removing AU 9 7 and 20
-# final features - AU02+AU10+AU11+AU12+AU14+ AU26+AU28+gender
-
-# make predictions now
-test$e_glm <- predict(e_glm1, test, type="response")
+# Step 1: Check continuous variables
+continuous <-select_if(data_rf, is.numeric)
+summary(continuous)
+#------------------------------extraversion -------------------------
